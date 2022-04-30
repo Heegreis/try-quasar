@@ -1,0 +1,39 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Deploy SPA
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: set Git
+      env:
+        QUASAR_DEPLOY_PRI: ${{secrets.QUASAR_DEPLOY_PRI}}
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$QUASAR_DEPLOY_PRI" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        git config --global user.name "heegreis"
+        git config --global user.email "run3113214@gmail.com"
+    - run: yarn global add @quasar/cli
+    - run: yarn
+    - run: quasar build
+    - run: yarn deploy
