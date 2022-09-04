@@ -1,19 +1,23 @@
 import { app, BrowserWindow, nativeTheme } from 'electron'
 import path from 'path'
 import os from 'os'
+import { spawn } from 'child_process'
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform()
 
 try {
   if (platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
-    require('fs').unlinkSync(path.join(app.getPath('userData'), 'DevTools Extensions'))
+    require('fs').unlinkSync(
+      path.join(app.getPath('userData'), 'DevTools Extensions')
+    )
   }
-} catch (_) { }
+} catch (_) {}
 
 let mainWindow
+let pythonBackgroundProcess
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
@@ -25,8 +29,8 @@ function createWindow () {
     webPreferences: {
       contextIsolation: true,
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
-      preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
-    }
+      preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD),
+    },
   })
 
   mainWindow.loadURL(process.env.APP_URL)
@@ -43,6 +47,20 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  pythonBackgroundProcess = spawn('python', ['src-python/background.py'])
+
+  pythonBackgroundProcess.stdout.on('data', (data) => {
+    console.log(data.toString())
+  })
+
+  pythonBackgroundProcess.stderr.on('data', (data) => {
+    console.log(data.toString())
+  })
+
+  pythonBackgroundProcess.on('exit', (code) => {
+    console.log(`Python process exited with code ${code}`)
   })
 }
 

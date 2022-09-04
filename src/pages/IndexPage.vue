@@ -10,8 +10,21 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { io } from 'socket.io-client'
 
 export default defineComponent({
   name: 'IndexPage',
+  setup() {
+    const socket = io('http://localhost:3000')
+    socket.on('connect', () => {
+      console.log('connected')
+    })
+    socket.on('disconnect', () => {
+      console.log('disconnected')
+    })
+    socket.on('message', (data) => {
+      console.log(data)
+    })
+  },
 })
 </script>
