@@ -49,7 +49,7 @@ function createWindow() {
     mainWindow = null
   })
 
-  pythonBackgroundProcess = spawn('python', ['src-python/background.py'])
+  pythonBackgroundProcess = spawn('python', ['src-python/server.py'])
 
   pythonBackgroundProcess.stdout.on('data', (data) => {
     console.log(data.toString())

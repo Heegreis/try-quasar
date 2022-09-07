@@ -5,6 +5,7 @@
       src="~assets/quasar-logo-vertical.svg"
       style="width: 200px; height: 200px"
     />
+    <img id="image" />
   </q-page>
 </template>
 
@@ -24,6 +25,10 @@ export default defineComponent({
     })
     socket.on('message', (data) => {
       console.log(data)
+    })
+    socket.on('image_server2client', (data) => {
+      const image = document.getElementById('image')
+      image.src = `data:image/jpeg;base64,${data}`
     })
   },
 })

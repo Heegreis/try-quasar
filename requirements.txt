@@ -1,2 +1,3 @@
 aiohttp[speedups]
 python-socketio
+opencv-python

@@ -1,8 +1,9 @@
+from multiprocessing import Process, Queue
 import sys
-from time import sleep
+
 import socketio
 from aiohttp import web
-import multiprocessing as mp
+from cv import background
 
 
 sio = socketio.AsyncServer(async_mode='aiohttp', cors_allowed_origins='*')
@@ -14,22 +15,18 @@ async def connect(sid, environ, auth):
     print("connect ", sid)
     sys.stdout.flush()
 
-
 @sio.event
 async def disconnect(sid):
     print('disconnect ', sid)
     sys.stdout.flush()
+    background_process.terminate()
 
-def background():
-    count = 0
-    while True:
-        count += 1
-        print(f'This is python background {count}')
-        sys.stdout.flush()
-        sleep(1)
+@sio.event
+async def image_cv2server(sid, data):
+    await sio.emit('image_server2client', data)
 
 if __name__ == "__main__":
+    image_queue = Queue()
+    background_process = Process(target=background, args=(image_queue,), daemon=True)
+    background_process.start()
     web.run_app(app, port=3000)
-    print('background')
-    sys.stdout.flush()
-    background()
