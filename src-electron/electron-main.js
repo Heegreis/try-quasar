@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme, dialog } from 'electron'
 import path from 'path'
 import os from 'os'
 import { spawn } from 'child_process'
@@ -35,28 +35,46 @@ function createWindow() {
 
   mainWindow.loadURL(process.env.APP_URL)
 
+  let pythonScriptPath
+  let pythonCommand
   if (process.env.DEBUGGING) {
     // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
+
+    pythonScriptPath = path.resolve(__dirname, '../src-python', 'server.py')
+    console.log('pythonScriptPath', pythonScriptPath)
+    pythonCommand = 'python ' + pythonScriptPath
+    pythonBackgroundProcess = spawn('python', [pythonScriptPath])
   } else {
     // we're on production; no access to devtools pls
     mainWindow.webContents.on('devtools-opened', () => {
       mainWindow.webContents.closeDevTools()
     })
+
+    pythonScriptPath = path.resolve(
+      __dirname,
+      '../../../../../dist/server/server.exe'
+    )
+    pythonCommand = pythonScriptPath
+    pythonBackgroundProcess = spawn(pythonCommand)
   }
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
-  pythonBackgroundProcess = spawn('python', ['src-python/server.py'])
+  // pythonBackgroundProcess = spawn('python', ['src-python/server.py'])
+  dialog.showErrorBox('pythonScriptPath', pythonScriptPath)
+  // pythonBackgroundProcess = spawn('python', [pythonScriptPath])
 
   pythonBackgroundProcess.stdout.on('data', (data) => {
     console.log(data.toString())
+    dialog.showErrorBox('Python out', data.toString())
   })
 
   pythonBackgroundProcess.stderr.on('data', (data) => {
     console.log(data.toString())
+    dialog.showErrorBox('Python Error', data.toString())
   })
 
   pythonBackgroundProcess.on('exit', (code) => {

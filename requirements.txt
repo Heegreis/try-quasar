@@ -1,3 +1,5 @@
 aiohttp[speedups]
 python-socketio
+python-socketio[client]
 opencv-python
+pyinstaller
