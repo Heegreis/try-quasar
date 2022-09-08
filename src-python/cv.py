@@ -1,13 +1,13 @@
 # -*- encoding:utf-8 -*-
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
 import sys
 import time
 import base64
 import os
+from pathlib import Path
 
 import cv2
 import socketio
-from aiohttp import web
 
 
 def convert_image_to_jpeg(image):
@@ -18,18 +18,20 @@ def convert_image_to_jpeg(image):
     frame = base64.b64encode(frame).decode('utf-8')
     return frame
 
-def background(image_queue):
-    print("Background")
+def background(message_queue: Queue) -> None:
     sio = socketio.Client()
 
     @sio.event
     def connect():
-        print('connection established')
-        print(os.getcwd())
-        sio.emit('t_cv2server', os.getcwd())
         sys.stdout.flush()
 
-        cap = cv2.VideoCapture('../../example.mp4')
+        if Path(__file__).suffixes[0] == '.py':
+            # put video to try-quasar/example.mp4
+            video = 'example.mp4'
+        else:
+            # put video to try-quasar/dist/example.mp4
+            video = str((Path(os.getcwd()).parent.parent/'example.mp4').absolute())
+        cap = cv2.VideoCapture(video)
         width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
         fps = cap.get(cv2.CAP_PROP_FPS)
@@ -57,4 +59,3 @@ def background(image_queue):
                 time.sleep(1/fps - frame_remain_time)
 
     sio.connect('http://localhost:3000')
-

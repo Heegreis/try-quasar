@@ -6,7 +6,7 @@
       style="width: 200px; height: 200px"
     />
     <img id="image" />
-    <span id="t"></span>
+    <span id="text"></span>
   </q-page>
 </template>
 
@@ -31,9 +31,9 @@ export default defineComponent({
       const image = document.getElementById('image')
       image.src = `data:image/jpeg;base64,${data}`
     })
-    socket.on('t_server2client', (data) => {
-      const t = document.getElementById('t')
-      t.textContent = data
+    socket.on('string_server2client', (data) => {
+      const text = document.getElementById('text')
+      text.textContent = data
     })
   },
 })

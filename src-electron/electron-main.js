@@ -63,13 +63,8 @@ function createWindow() {
     mainWindow = null
   })
 
-  // pythonBackgroundProcess = spawn('python', ['src-python/server.py'])
-  dialog.showErrorBox('pythonScriptPath', pythonScriptPath)
-  // pythonBackgroundProcess = spawn('python', [pythonScriptPath])
-
   pythonBackgroundProcess.stdout.on('data', (data) => {
     console.log(data.toString())
-    dialog.showErrorBox('Python out', data.toString())
   })
 
   pythonBackgroundProcess.stderr.on('data', (data) => {
