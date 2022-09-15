@@ -15,3 +15,9 @@
  *     doAThing: () => {}
  *   })
  */
+
+import { contextBridge, ipcRenderer } from 'electron'
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  dialogOpenDirectory: () => ipcRenderer.invoke('dialog:openDirectory'),
+})
