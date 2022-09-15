@@ -204,3 +204,15 @@ quasar build
 ### Customize the configuration
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).
+
+## Usage
+
+### Build Electron and Python backend .exe
+
+```bash
+quasar build -m electron
+```
+
+```bash
+pyinstaller server.spec
+```
