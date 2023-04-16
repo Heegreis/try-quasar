@@ -1,4 +1,6 @@
-# try-quasar
+# Quasar App (try-quasar)
+
+A Quasar Project
 
 ## The create env
 
@@ -6,14 +8,14 @@ OS: windows 11
 
 ```bash
 $ node -v
-v14.17.1
+v18.13.0
 
 $ yarn -v
 1.22.4
 
 $ yarn global list
 yarn global v1.22.4
-info "@quasar/cli@1.3.2" has binaries:
+info "@quasar/cli@2.0.0" has binaries:
    - quasar
 ...
 ```
@@ -26,7 +28,7 @@ $ yarn create quasar
 √ Project folder: ... try-quasar
 √ Pick Quasar version: » Quasar v2 (Vue 3 | latest and greatest)
 √ Pick script type: » Javascript
-√ Pick Quasar App CLI variant: » Quasar App CLI with Webpack (stable)
+√ Pick Quasar App CLI variant: » Quasar App CLI with Webpack
 √ Package name: ... try-quasar
 √ Project product name: (must start with letter if building mobile apps) ... Quasar App
 √ Project description: ... A Quasar Project
@@ -50,9 +52,13 @@ info "fsevents@1.2.9" is an optional dependency and failed compatibility check. 
 info fsevents@2.1.2: The platform "win32" is incompatible with this module.
 info "fsevents@2.1.2" is an optional dependency and failed compatibility check. Excluding it from installation.
 [3/4] Linking dependencies...
+warning Workspaces can only be enabled in private projects.
+warning Workspaces can only be enabled in private projects.
+warning Workspaces can only be enabled in private projects.
+warning Workspaces can only be enabled in private projects.
 [4/4] Building fresh packages...
 
-success Installed "create-quasar@1.0.17" with binaries:
+success Installed "create-quasar@1.1.2" with binaries:
       - create-quasar
 
 
@@ -70,7 +76,7 @@ Y88b.Y8b88P Y88b 888 888  888      X88 888  888 888
 √ Project folder: ... try-quasar
 √ Pick Quasar version: » Quasar v2 (Vue 3 | latest and greatest)
 √ Pick script type: » Javascript
-√ Pick Quasar App CLI variant: » Quasar App CLI with Webpack (stable)
+√ Pick Quasar App CLI variant: » Quasar App CLI with Webpack
 √ Package name: ... try-quasar
 √ Project product name: (must start with letter if building mobile apps) ... Quasar App
 √ Project description: ... A Quasar Project
@@ -86,6 +92,7 @@ Y88b.Y8b88P Y88b 888 888  888      X88 888  888 888
  - README.md
  - .editorconfig
  - .gitignore
+ - .npmrc
  - .postcssrc.js
  - jsconfig.json
  - package.json
@@ -126,20 +133,22 @@ yarn install v1.22.4
 info No lockfile found.
 [1/5] Validating package.json...
 [2/5] Resolving packages...
+warning vue > @vue/compiler-sfc > magic-string > sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+warning @quasar/app-webpack > cssnano > cssnano-preset-default > postcss-svgo > svgo > stable@0.1.8: Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility
 [3/5] Fetching packages...
 info fsevents@2.3.2: The platform "win32" is incompatible with this module.
 info "fsevents@2.3.2" is an optional dependency and failed compatibility check. Excluding it from installation.
 [4/5] Linking dependencies...
-warning " > @babel/eslint-parser@7.17.0" has unmet peer dependency "@babel/core@>=7.11.0".
-warning " > eslint-webpack-plugin@3.1.1" has unmet peer dependency "webpack@^5.0.0".
+warning " > @babel/eslint-parser@7.21.3" has unmet peer dependency "@babel/core@>=7.11.0".
+warning " > eslint-webpack-plugin@3.2.0" has unmet peer dependency "webpack@^5.0.0".
 [5/5] Building fresh packages...
 success Saved lockfile.
-Done in 49.17s.
+Done in 62.22s.
 
 
 yarn run v1.22.4
 $ eslint --ext .js,.vue ./ --fix
-Done in 1.84s.
+Done in 1.78s.
 
 
 To get started:
@@ -152,7 +161,7 @@ Documentation can be found at: https://v2.quasar.dev
 Quasar is relying on donations to evolve. We'd be very grateful if you can
 read our manifest on "Why donations are important": https://v2.quasar.dev/why-donate
 Donation campaign: https://donate.quasar.dev
-Any amount is very welcomed.
+Any amount is very welcome.
 If invoices are required, please first contact Razvan Stoenescu.
 
 Please give us a star on Github if you appreciate our work:
@@ -160,10 +169,37 @@ Please give us a star on Github if you appreciate our work:
 
 Enjoy! - Quasar Team
 
-Done in 244.87s.
+Done in 175.49s.
 ```
 
 </details>
+
+## Extra steps
+
+### Add `.prettierrc`
+
+```.prettierrc
+{
+  "semi": false,
+  "singleQuote": true
+}
+```
+
+### Setup `push-dir`
+
+First, install the package with:
+
+```bash
+$ yarn add --dev push-dir
+```
+
+Then add a deploy script command to `package.json`:
+
+```json
+"scripts": {
+  "deploy": "push-dir --dir=dist/spa --remote=origin --branch=gh-pages"
+}
+```
 
 ## Install the dependencies
 
